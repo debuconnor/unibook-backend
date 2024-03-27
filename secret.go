@@ -19,7 +19,7 @@ func accessSecretVersion(name string) (secretData string) {
 	ctx := context.Background()
 	client, err := secretmanager.NewClient(ctx)
 	if err != nil {
-		Log("Failed to create secretmanager client")
+		Error(ERROR_CODE_CREATE_SECRETMANAGER_CLIENT)
 		return
 	}
 	defer client.Close()
@@ -32,7 +32,7 @@ func accessSecretVersion(name string) (secretData string) {
 	// Call the API.
 	result, err := client.AccessSecretVersion(ctx, req)
 	if err != nil {
-		Log("failed to access secret version")
+		Error(ERROR_CODE_ACCESS_SECRET_VERSION)
 		return
 	}
 
@@ -40,7 +40,7 @@ func accessSecretVersion(name string) (secretData string) {
 	crc32c := crc32.MakeTable(crc32.Castagnoli)
 	checksum := int64(crc32.Checksum(result.Payload.Data, crc32c))
 	if checksum != *result.Payload.DataCrc32C {
-		Log("Data corruption detected")
+		Error(ERROR_CODE_DATA_CORRUPTION)
 		return
 	}
 
