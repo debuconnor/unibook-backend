@@ -44,6 +44,6 @@ func SaveLog(filename string, msg ...interface{}) {
 }
 
 func Error(code int) {
-	SaveLog("./var/", "Error: ", code)
+	SaveLog("Error: ", code)
 	Log("Error: ", code)
 }
